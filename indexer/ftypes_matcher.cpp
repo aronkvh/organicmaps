@@ -875,6 +875,13 @@ IsRailwaySubwayEntranceChecker::IsRailwaySubwayEntranceChecker()
   m_types.push_back(c.GetTypeByPath({"railway", "subway_entrance"}));
 }
 
+IsPlatformChecker::IsPlatformChecker()
+{
+  Classificator const & c = classif();
+  m_types.push_back(c.GetTypeByPath({"railway", "platform"}));
+  m_types.push_back(c.GetTypeByPath({"public_transport", "platform"}));
+}
+
 IsAddressInterpolChecker::IsAddressInterpolChecker() : BaseChecker(1 /* level */)
 {
   Classificator const & c = classif();

@@ -579,6 +579,14 @@ public:
   DECLARE_CHECKER_INSTANCE(IsRailwaySubwayEntranceChecker);
 };
 
+class IsPlatformChecker : public BaseChecker
+{
+  IsPlatformChecker();
+
+public:
+  DECLARE_CHECKER_INSTANCE(IsPlatformChecker);
+};
+
 class IsAddressInterpolChecker : public BaseChecker
 {
   IsAddressInterpolChecker();
