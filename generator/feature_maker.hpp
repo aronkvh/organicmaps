@@ -4,6 +4,8 @@
 #include "generator/feature_maker_base.hpp"
 #include "generator/intermediate_data.hpp"
 
+#include "geometry/latlon.hpp"
+
 struct OsmElement;
 
 namespace generator
@@ -19,6 +21,9 @@ public:
 
 protected:
   void ParseParams(FeatureBuilderParams & params, OsmElement & element) const override;
+
+  /// @return Any origin point (prefer nodes) that belongs to \a e in mercator projection.
+  m2::PointD GetOrigin(OsmElement const & e) const;
 
 private:
   bool BuildFromNode(OsmElement & element, FeatureBuilderParams const & params) override;
