@@ -1,10 +1,7 @@
 #pragma once
 
-#include "generator/feature_builder.hpp"
 #include "generator/feature_maker_base.hpp"
-#include "generator/intermediate_data.hpp"
 
-#include "geometry/latlon.hpp"
 
 struct OsmElement;
 
@@ -17,18 +14,23 @@ class FeatureMakerSimple: public FeatureMakerBase
 public:
   using FeatureMakerBase::FeatureMakerBase;
 
+  /// @name FeatureMakerBase overrides:
+  /// @{
   std::shared_ptr<FeatureMakerBase> Clone() const override;
 
 protected:
   void ParseParams(FeatureBuilderParams & params, OsmElement & element) const override;
 
-  /// @return Any origin point (prefer nodes) that belongs to \a e in mercator projection.
-  m2::PointD GetOrigin(OsmElement const & e) const;
-
-private:
   bool BuildFromNode(OsmElement & element, FeatureBuilderParams const & params) override;
   bool BuildFromWay(OsmElement & element, FeatureBuilderParams const & params) override;
   bool BuildFromRelation(OsmElement & element, FeatureBuilderParams const & params) override;
+  /// @}
+
+protected:
+  virtual bool IsMaxRelationAreaMode(FeatureBuilderParams const &) const { return false; }
+
+  /// @return Any origin point (prefer nodes) that belongs to \a e in mercator projection.
+  m2::PointD GetOrigin(OsmElement const & e) const;
 };
 
 // FeatureMaker additionally filters the types using feature::IsUsefulType.
@@ -37,9 +39,15 @@ class FeatureMaker : public FeatureMakerSimple
 public:
   using FeatureMakerSimple::FeatureMakerSimple;
 
+  /// @name FeatureMakerBase overrides:
+  /// @{
   std::shared_ptr<FeatureMakerBase> Clone() const override;
 
-private:
+protected:
   void ParseParams(FeatureBuilderParams & params, OsmElement & element) const override;
+  /// @}
+
+  /// @name FeatureMakerSimple overrides:
+  bool IsMaxRelationAreaMode(FeatureBuilderParams const &) const override;
 };
 }  // namespace generator
