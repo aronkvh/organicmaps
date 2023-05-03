@@ -1055,8 +1055,9 @@ void GetNameAndType(OsmElement * p, FeatureBuilderParams & params,
   namesExtractor.Finish();
 
   // Stage3: Process base feature tags.
-  std::string houseName, houseNumber;
-  TagProcessor(p).ApplyRules<void(string &, string &)>({
+  std::string houseName, houseNumber, addrPostcode;
+  TagProcessor(p).ApplyRules<void(string &, string &)>(
+  {
       {"addr:housenumber", "*",
        [&houseNumber](string & k, string & v) {
          houseNumber = std::move(v);
@@ -1071,13 +1072,21 @@ void GetNameAndType(OsmElement * p, FeatureBuilderParams & params,
        }},
       {"addr:street", "*",
        [&params](string & k, string & v) {
-         params.AddStreet(v);
+         params.SetStreet(std::move(v));
          k.clear();
          v.clear();
        }},
-      {"addr:postcode", "*",
-       [&params](string & k, string & v) {
-         params.AddPostcode(v);
+      {"addr:postcode", "*", [&addrPostcode](string & k, string & v)
+      {
+        addrPostcode = std::move(v);
+        k.clear();
+        v.clear();
+      }},
+      {"postal_code", "*", [&addrPostcode](string & k, string & v)
+      {
+        addrPostcode = std::move(v);
+        k.clear();
+        v.clear();
       }},
       {"population", "*",
        [&params](string & k, string & v) {
@@ -1106,6 +1115,7 @@ void GetNameAndType(OsmElement * p, FeatureBuilderParams & params,
        }},
   });
 
+  params.SetPostcode(addrPostcode);
   params.SetHouseNumberAndHouseName(std::move(houseNumber), std::move(houseName));
 
   // Stage4: Match tags to classificator feature types via mapcss-mapping.csv.
