@@ -924,10 +924,19 @@ void PostprocessElement(OsmElement * p, FeatureBuilderParams & params)
 
     if (!hasSuitableType)
     {
+      /// @todo Worth to add Address type for existing Entrance only when params.name is not empty.
+      /// When we will fix entrance only styles to correct draw house number.
       AddParam(CachedTypes::Address);
-      
-      if (!params.name.IsEmpty() || !params.ref.empty())
-        LOG(LWARNING, ("Address with name or ref:", GetGeoObjectId(*p), params.name, params.ref));
+
+      // https://github.com/organicmaps/organicmaps/issues/5803
+      for (auto const & tag : p->Tags())
+      {
+        if (strings::StartsWith(tag.m_key, "disused") || strings::StartsWith(tag.m_key, "abandoned"))
+        {
+          params.ClearPOIAttribs();
+          break;
+        }
+      }
     }
   }
 

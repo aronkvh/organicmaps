@@ -357,6 +357,8 @@ public:
   /// @return true If any inconsistency was found here.
   bool RemoveInconsistentTypes();
 
+  void ClearPOIAttribs();
+
   friend std::string DebugPrint(FeatureBuilderParams const & p);
 
 private:

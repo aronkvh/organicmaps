@@ -623,6 +623,12 @@ bool FeatureBuilderParams::RemoveInconsistentTypes()
   return ynTypes.RemoveInconsistent(m_types);
 }
 
+void FeatureBuilderParams::ClearPOIAttribs()
+{
+  ClearName();
+  m_metadata.ClearPOIAttribs();
+}
+
 string DebugPrint(FeatureParams const & p)
 {
   string res = "Types: " + TypesToString(p.m_types) + "; ";
