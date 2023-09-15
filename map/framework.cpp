@@ -2857,8 +2857,7 @@ void SetStreet(search::ReverseGeocoder const & coder, DataSource const & dataSou
 {
   // Get exact feature's street address (if any) from mwm,
   // together with all nearby streets.
-  vector<search::ReverseGeocoder::Street> streets;
-  coder.GetNearbyStreets(ft, streets);
+  auto const streets = coder.GetNearbyStreets(ft);
 
   string street = coder.GetFeatureStreetName(ft);
 
@@ -2943,9 +2942,7 @@ bool Framework::CreateMapObject(m2::PointD const & mercator, uint32_t const feat
     return false;
 
   search::ReverseGeocoder const coder(m_featuresFetcher.GetDataSource());
-  vector<search::ReverseGeocoder::Street> streets;
-
-  coder.GetNearbyStreets(mwmId, mercator, streets);
+  auto const streets = coder.GetNearbyStreets(mwmId, mercator);
   emo.SetNearbyStreets(TakeSomeStreetsAndLocalize(streets, m_featuresFetcher.GetDataSource()));
 
   // TODO(mgsergio): Check emo is a poi. For now it is the only option.
