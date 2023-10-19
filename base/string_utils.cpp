@@ -307,12 +307,7 @@ bool StartsWith(UniString const & s, UniString const & p)
   return StartsWith(s.begin(), s.end(), p.begin(), p.end());
 }
 
-bool StartsWith(std::string const & s1, char const * s2)
-{
-  return (s1.compare(0, strlen(s2), s2) == 0);
-}
-
-bool StartsWith(std::string const & s1, std::string_view s2)
+bool StartsWith(std::string_view const & s1, std::string_view s2)
 {
   return (s1.compare(0, s2.length(), s2) == 0);
 }
@@ -320,11 +315,6 @@ bool StartsWith(std::string const & s1, std::string_view s2)
 bool StartsWith(std::string const & s, std::string::value_type c)
 {
   return s.empty() ? false : s.front() == c;
-}
-
-bool StartsWith(std::string const & s1, std::string const & s2)
-{
-  return (s1.compare(0, s2.length(), s2) == 0);
 }
 
 bool EndsWith(UniString const & s1, UniString const & s2)
