@@ -21,7 +21,7 @@ public:
 
   ~WaterBoundaryChecker()
   {
-    LOG_SHORT(LINFO, ("Features checked:", m_totalFeatures, "borders checked:", m_totalBorders,
+    LOG_SHORT(LINFO, ("WaterBoundaryChecker: features checked:", m_totalFeatures, "borders checked:", m_totalBorders,
                 "borders skipped:", m_skippedBorders, "selected polygons:", m_selectedPolygons));
   }
 
@@ -75,6 +75,10 @@ public:
     Earth
   };
 
+  // TODO(pastk): boundaries along the coast are being "torn" into small pieces instead of being discarded completely.
+  // Likely it happens because an already simplified coastline is used, while boundary lines are not simplified yet.
+  // It causes these lines to intersect each other often.
+  // https://github.com/organicmaps/organicmaps/issues/6445
   void ProcessBoundary(feature::FeatureBuilder const & boundary, std::vector<feature::FeatureBuilder> & parts)
   {
     auto const & line = boundary.GetGeometry().front();

@@ -62,11 +62,32 @@ class WorldMapGenerator
     /// This function is called after merging linear features.
     void operator()(feature::FeatureBuilder const & fb) override
     {
-      // Do additional check for suitable size of feature, because
-      // same check in NeedPushToWorld() applies to areas only.
-      if (NeedPushToWorld(fb) &&
-          scales::IsGoodForLevel(scales::GetUpperWorldScale(), fb.GetLimitRect()))
+      // TODO(pastk): there seems to be two area size checks: in NeedPushToWorld() and in PushFeature().
+      if (NeedPushToWorld(fb))
+      {
+        auto const r = fb.GetLimitRect();
+
+        // Discard too short ferry lines.
+        static const uint32_t ferryType = classif().GetTypeByPath({"route", "ferry"});
+        constexpr int ferryThresholdLevel = scales::GetUpperWorldScale() - 2;
+
+        // Discard too short boundary lines (boundaries along the coast are being "torn"
+        // into small pieces by the coastline in WaterBoundaryChecker::ProcessBoundary()).
+        static const uint32_t boundaryType = classif().GetTypeByPath({"boundary", "administrative"});
+        constexpr int boundaryThresholdLevel = scales::GetUpperWorldScale() - 2;
+
+        // Discard too short roads incl. V-like approaches to roundabouts / other roads
+        // and small roundabouts that were not merged into longer roads for some reason.
+        static const uint32_t highwayType = classif().GetTypeByPath({"highway"});
+        constexpr int highwayThresholdLevel = scales::GetUpperWorldScale() + 2;
+
+        if ((fb.HasType(highwayType, 1) && !scales::IsGoodForLevel(highwayThresholdLevel, r)) ||
+            (fb.HasType(ferryType) && !scales::IsGoodForLevel(ferryThresholdLevel, r)) ||
+            (fb.HasType(boundaryType, 2) && !scales::IsGoodForLevel(boundaryThresholdLevel, r)))
+          return;
+
         PushSure(fb);
+      }
     }
 
     void CalcStatistics(feature::FeatureBuilder const & fb)
