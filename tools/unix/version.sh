@@ -31,7 +31,7 @@ function ios_version {
 }
 
 function ios_build {
-  echo "$COUNT"
+  echo $((COUNT + 100)) 
 }
 
 function  android_name {
