@@ -22,8 +22,6 @@ public:
   void SetRound();
   bool IsRound() const { return m_isRound; }
 
-  void ZeroParams() { m_params.MakeZero(); }
-
   void AppendFeature(MergedFeatureBuilder const & fb, bool fromBegin, bool toBack);
 
   bool EqualGeometry(MergedFeatureBuilder const & fb) const;

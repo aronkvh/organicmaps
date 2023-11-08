@@ -323,9 +323,6 @@ MergedFeatureBuilder * FeatureTypesProcessor::operator() (FeatureBuilder const &
     return 0;
   }
 
-  // zero all additional params for world merged features (names, ranks, ...)
-  p->ZeroParams();
-
   return p;
 }
 

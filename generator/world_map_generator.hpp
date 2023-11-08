@@ -86,7 +86,8 @@ class WorldMapGenerator
             (fb.HasType(boundaryType, 2) && !scales::IsGoodForLevel(boundaryThresholdLevel, r)))
           return;
 
-        PushSure(fb);
+        auto mfb = fb; // Could be modified in PushSure().
+        PushSure(mfb);
       }
     }
 
@@ -101,8 +102,12 @@ class WorldMapGenerator
       return generator::FilterWorld::IsGoodScale(fb);
     }
 
-    void PushSure(feature::FeatureBuilder const & fb)
+    void PushSure(feature::FeatureBuilder & fb)
     {
+      // Discard name, metadata, etc. for lines and areas.
+      // TODO(pastk): filter points metadata, retain necessary bits only.
+      if (fb.GetGeomType() != feature::GeomType::Point)
+        fb.ResetParams();
       CalcStatistics(fb);
       m_output.Collect(fb);
     }
