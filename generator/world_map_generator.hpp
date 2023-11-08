@@ -118,7 +118,7 @@ public:
   explicit WorldMapGenerator(std::string const & worldFilename, std::string const & rawGeometryFileName,
                              std::string const & popularPlacesFilename)
     : m_worldBucket(worldFilename)
-    , m_merger(kPointCoordBits - (scales::GetUpperScale() - scales::GetUpperWorldScale()) / 2)
+    , m_merger(kFeatureSorterPointCoordBits - (scales::GetUpperScale() - scales::GetUpperWorldScale()) / 2)
     , m_boundaryChecker(rawGeometryFileName)
     , m_popularPlacesFilename(popularPlacesFilename)
   {
